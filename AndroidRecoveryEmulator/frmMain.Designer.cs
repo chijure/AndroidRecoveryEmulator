@@ -487,15 +487,16 @@ namespace AndroidRecoveryEmulator
             this.ptbBackgroundImage.TabIndex = 0;
             this.ptbBackgroundImage.TabStop = false;
             // 
-            // Form1
+            // frmMain
             // 
             this.ClientSize = new System.Drawing.Size(303, 536);
             this.Controls.Add(this.MainMenu);
             this.Controls.Add(this.ptbBackgroundImage);
             this.Controls.Add(this.pictureBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "frmMain";
             this.Text = "Android Recovery Emulator";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.WipeData.ResumeLayout(false);
