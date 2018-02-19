@@ -2,7 +2,7 @@
 
 namespace AndroidRecoveryEmulator
 {
-    partial class Form1
+    partial class frmMain
     {
         /// <summary>
         /// Variable del diseñador necesaria.
@@ -31,7 +31,7 @@ namespace AndroidRecoveryEmulator
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.installZip = new System.Windows.Forms.Label();
             this.rebootExit = new System.Windows.Forms.Label();
             this.factoryresetMenu = new System.Windows.Forms.Label();

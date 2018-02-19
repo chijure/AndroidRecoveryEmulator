@@ -7,13 +7,13 @@ using System.Windows.Forms;
 
 namespace AndroidRecoveryEmulator
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         public static string zip;
         public static bool error;
         public static int lineno;
         public static int progress;       
-        public Form1()
+        public frmMain()
         {
             InitializeComponent();
             WipeData.Parent = ptbBackgroundImage;
@@ -109,9 +109,9 @@ namespace AndroidRecoveryEmulator
                 ((Label)sender).Parent.Visible = false;
                 return;
             }
-            Form1.zip = openFileDialog.FileName;
+            frmMain.zip = openFileDialog.FileName;
             ((Label)sender).Parent.Visible = false;
-            YesInstallZip.Text = string.Concat(YesInstallZip.Text, Path.GetFileName(Form1.zip), "                                                        ");
+            YesInstallZip.Text = string.Concat(YesInstallZip.Text, Path.GetFileName(frmMain.zip), "                                                        ");
             InstallZipConfirm.Visible = true;
             InstallZipConfirm.Dock = DockStyle.Fill;
         }
@@ -122,9 +122,9 @@ namespace AndroidRecoveryEmulator
             {
                 File.WriteAllBytes(string.Concat(Directory.GetCurrentDirectory(), "\\unzip.exe"), Resources.unzip);
             }
-            Form1.lineno = 0;
-            Form1.progress = 0;
-            Form1.error = false;
+            frmMain.lineno = 0;
+            frmMain.progress = 0;
+            frmMain.error = false;
             try
             {
                 Directory.Delete(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualZip"), true);
@@ -136,7 +136,7 @@ namespace AndroidRecoveryEmulator
             ((Label)sender).Parent.Visible = false;
             MainMenu.Visible = false;
             Output.Text = string.Concat(Output.Text, "\n");
-            Output.Text = string.Concat(Output.Text, "\n-- Installing: ", Path.GetFileName(Form1.zip));
+            Output.Text = string.Concat(Output.Text, "\n-- Installing: ", Path.GetFileName(frmMain.zip));
             Output.Text = string.Concat(Output.Text, "\nFinding update package...");
             Output.Text = string.Concat(Output.Text, "\nOpening update package...");
             Process process = new Process();
@@ -146,7 +146,7 @@ namespace AndroidRecoveryEmulator
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 FileName = string.Concat(Directory.GetCurrentDirectory(), "\\unzip.exe"),
-                Arguments = string.Concat(new string[] { " \"", Form1.zip, "\" -d \"", Directory.GetCurrentDirectory(), "\\VirtualZip\"" })
+                Arguments = string.Concat(new string[] { " \"", frmMain.zip, "\" -d \"", Directory.GetCurrentDirectory(), "\\VirtualZip\"" })
             };
             process.StartInfo = processStartInfo;
             process.Start();
@@ -158,14 +158,14 @@ namespace AndroidRecoveryEmulator
             if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualZip\\META-INF\\com\\google\\android\\updater-script")))
             {
                 Output.Text = string.Concat(Output.Text, "\n{0}ERROR: No upater-script");
-                Form1.error = true;
+                frmMain.error = true;
             }
             else
             {
                 Output.Text = string.Concat(Output.Text, "\nInstalling update...");
                 foreach (string str in File.ReadLines(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualZip\\META-INF\\com\\google\\android\\updater-script")))
                 {
-                    Form1.lineno++;
+                    frmMain.lineno++;
                     str.StartsWith("#");
                     if (str.StartsWith("ui_print("))
                     {
@@ -188,7 +188,7 @@ namespace AndroidRecoveryEmulator
                         if (!Directory.Exists(Path.GetDirectoryName(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str2))))
                         {
                             Label output = Output;
-                            object[] text = new object[] { Output.Text, "\n{", Form1.lineno, "}ERROR: Directory does not exist - ", null };
+                            object[] text = new object[] { Output.Text, "\n{", frmMain.lineno, "}ERROR: Directory does not exist - ", null };
                             text[4] = str.Split(new char[] { '\"' })[3];
                             output.Text = string.Concat(text);
                         }
@@ -206,10 +206,10 @@ namespace AndroidRecoveryEmulator
                         if (!Directory.Exists(Path.GetDirectoryName(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice\\", str4))))
                         {
                             Label label = Output;
-                            object[] objArray = new object[] { Output.Text, "\n{", Form1.lineno, "}ERROR: directory not found in zip - ", null };
+                            object[] objArray = new object[] { Output.Text, "\n{", frmMain.lineno, "}ERROR: directory not found in zip - ", null };
                             objArray[4] = str.Split(new char[] { '\"' })[1];
                             label.Text = string.Concat(objArray);
-                            Form1.error = true;
+                            frmMain.error = true;
                         }
                         else
                         {
@@ -240,18 +240,18 @@ namespace AndroidRecoveryEmulator
                         if (!str.StartsWith("run_program(\"/system") && !str.StartsWith("run_program(\"/tmp"))
                         {
                             Label output1 = Output;
-                            object[] text1 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: file not found - ", null };
+                            object[] text1 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: file not found - ", null };
                             text1[4] = str.Split(new char[] { '\"' })[1];
                             output1.Text = string.Concat(text1);
-                            Form1.error = true;
+                            frmMain.error = true;
                         }
                         else if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str7)))
                         {
                             Label label1 = Output;
-                            object[] objArray1 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: file not found - ", null };
+                            object[] objArray1 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: file not found - ", null };
                             objArray1[4] = str.Split(new char[] { '\"' })[1];
                             label1.Text = string.Concat(objArray1);
-                            Form1.error = true;
+                            frmMain.error = true;
                         }
                     }
                     if (str.StartsWith("delete("))
@@ -261,18 +261,18 @@ namespace AndroidRecoveryEmulator
                         if (!str.StartsWith("delete(\"/system"))
                         {
                             Label output2 = Output;
-                            object[] text2 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: file not found - ", null };
+                            object[] text2 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: file not found - ", null };
                             text2[4] = str.Split(new char[] { '\"' })[1];
                             output2.Text = string.Concat(text2);
-                            Form1.error = true;
+                            frmMain.error = true;
                         }
                         else if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str8)))
                         {
                             Label label2 = Output;
-                            object[] objArray2 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: file not found - ", null };
+                            object[] objArray2 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: file not found - ", null };
                             objArray2[4] = str.Split(new char[] { '\"' })[1];
                             label2.Text = string.Concat(objArray2);
-                            Form1.error = true;
+                            frmMain.error = true;
                         }
                         else
                         {
@@ -286,18 +286,18 @@ namespace AndroidRecoveryEmulator
                         if (!str.StartsWith("delete_recursive(\"/system"))
                         {
                             Label output3 = Output;
-                            object[] text3 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: directory not found - ", null };
+                            object[] text3 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: directory not found - ", null };
                             text3[4] = str.Split(new char[] { '\"' })[1];
                             output3.Text = string.Concat(text3);
-                            Form1.error = true;
+                            frmMain.error = true;
                         }
                         else if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str9)))
                         {
                             Label label3 = Output;
-                            object[] objArray3 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: directory not found - ", null };
+                            object[] objArray3 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: directory not found - ", null };
                             objArray3[4] = str.Split(new char[] { '\"' })[1];
                             label3.Text = string.Concat(objArray3);
-                            Form1.error = true;
+                            frmMain.error = true;
                         }
                         else
                         {
@@ -331,10 +331,10 @@ namespace AndroidRecoveryEmulator
                             if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str11)))
                             {
                                 Label output4 = Output;
-                                object[] text4 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: file not found - ", null };
+                                object[] text4 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: file not found - ", null };
                                 text4[4] = str.Split(new char[] { '\"' })[1];
                                 output4.Text = string.Concat(text4);
-                                Form1.error = true;
+                                frmMain.error = true;
                             }
                         }
                         if (str.StartsWith("set_perm_recursive("))
@@ -344,10 +344,10 @@ namespace AndroidRecoveryEmulator
                             if (!Directory.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str12)))
                             {
                                 Label label4 = Output;
-                                object[] objArray4 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: directory not found - ", null };
+                                object[] objArray4 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: directory not found - ", null };
                                 objArray4[4] = str.Split(new char[] { '\"' })[1];
                                 label4.Text = string.Concat(objArray4);
-                                Form1.error = true;
+                                frmMain.error = true;
                             }
                         }
                         if (str.StartsWith("set_metadata("))
@@ -357,10 +357,10 @@ namespace AndroidRecoveryEmulator
                             if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str13)))
                             {
                                 Label output5 = Output;
-                                object[] text5 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: file not found - ", null };
+                                object[] text5 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: file not found - ", null };
                                 text5[4] = str.Split(new char[] { '\"' })[1];
                                 output5.Text = string.Concat(text5);
-                                Form1.error = true;
+                                frmMain.error = true;
                             }
                         }
                         if (str.StartsWith("set_metadata_recursive("))
@@ -370,10 +370,10 @@ namespace AndroidRecoveryEmulator
                             if (!Directory.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str14)))
                             {
                                 Label label5 = Output;
-                                object[] objArray5 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: directory not found - ", null };
+                                object[] objArray5 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: directory not found - ", null };
                                 objArray5[4] = str.Split(new char[] { '\"' })[1];
                                 label5.Text = string.Concat(objArray5);
-                                Form1.error = true;
+                                frmMain.error = true;
                             }
                         }
                         if (str.StartsWith("set_metadata_recursive("))
@@ -383,10 +383,10 @@ namespace AndroidRecoveryEmulator
                             if (!Directory.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str15)))
                             {
                                 Label output6 = Output;
-                                object[] text6 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: directory not found - ", null };
+                                object[] text6 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: directory not found - ", null };
                                 text6[4] = str.Split(new char[] { '\"' })[1];
                                 output6.Text = string.Concat(text6);
-                                Form1.error = true;
+                                frmMain.error = true;
                             }
                         }
                         if (str.StartsWith("symlink("))
@@ -398,10 +398,10 @@ namespace AndroidRecoveryEmulator
                                 if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str16)))
                                 {
                                     Label label6 = Output;
-                                    object[] objArray6 = new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: file not found - ", null };
+                                    object[] objArray6 = new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: file not found - ", null };
                                     objArray6[4] = str.Split(new char[] { '\"' })[1];
                                     label6.Text = string.Concat(objArray6);
-                                    Form1.error = true;
+                                    frmMain.error = true;
                                 }
                                 else if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str.Split(new char[] { '\"' })[3].Replace("/", "\\"))))
                                 {
@@ -410,8 +410,8 @@ namespace AndroidRecoveryEmulator
                             }
                             else if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice\\system\\bin\\", str16)))
                             {
-                                Output.Text = string.Concat(new object[] { Output.Text, "\n{", Form1.lineno, "}POSSIBLE ERROR: file not found - /system/bin/", str16 });
-                                Form1.error = true;
+                                Output.Text = string.Concat(new object[] { Output.Text, "\n{", frmMain.lineno, "}POSSIBLE ERROR: file not found - /system/bin/", str16 });
+                                frmMain.error = true;
                             }
                             else if (!File.Exists(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice", str.Split(new char[] { '\"' })[3].Replace("/", "\\"))))
                             {
@@ -424,14 +424,14 @@ namespace AndroidRecoveryEmulator
                         }
                         string str17 = str.Split(new char[] { '(' })[1];
                         str17 = str17.Split(new char[] { ',' })[0];
-                        Form1.progress = Form1.progress + int.Parse(str17.Split(new char[] { '.' })[1]) * 10;
-                        if (Form1.progress > 100)
+                        frmMain.progress = frmMain.progress + int.Parse(str17.Split(new char[] { '.' })[1]) * 10;
+                        if (frmMain.progress > 100)
                         {
                             Output.Text = string.Concat(Output.Text, "\nProgress - 100%");
                         }
                         else if (!str17.StartsWith("1.0"))
                         {
-                            Output.Text = string.Concat(Output.Text, "\nProgress - ", Form1.progress.ToString(), "%");
+                            Output.Text = string.Concat(Output.Text, "\nProgress - ", frmMain.progress.ToString(), "%");
                         }
                         else
                         {
@@ -440,8 +440,8 @@ namespace AndroidRecoveryEmulator
                     }
                     else
                     {
-                        Output.Text = string.Concat(new object[] { Output.Text, "\n{", Form1.lineno, "}INSTALL ABORTED" });
-                        Form1.error = true;
+                        Output.Text = string.Concat(new object[] { Output.Text, "\n{", frmMain.lineno, "}INSTALL ABORTED" });
+                        frmMain.error = true;
                         goto Label0;
                     }
                 }
@@ -461,7 +461,7 @@ namespace AndroidRecoveryEmulator
                 }
                 Directory.CreateDirectory(string.Concat(Directory.GetCurrentDirectory(), "\\VirtualDevice\\dev"));
             }
-            if (Form1.error)
+            if (frmMain.error)
             {
                 Output.Text = string.Concat(Output.Text, "\nInstall from local storage FAILED with POSSIBLE errors.");
             }
@@ -469,8 +469,8 @@ namespace AndroidRecoveryEmulator
             {
                 Output.Text = string.Concat(Output.Text, "\nInstall from local storage SUCCEEDED.");
             }
-            Form1.error = false;
-            Form1.lineno = 0;
+            frmMain.error = false;
+            frmMain.lineno = 0;
             MainMenu.Visible = true;
         }
         private void yesWipeCache_Click(object sender, EventArgs e)
